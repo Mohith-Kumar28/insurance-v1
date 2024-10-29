@@ -55,6 +55,7 @@ import ThemeToggle from './ThemeToggle/theme-toggle';
 import { UserNav } from './user-nav';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { LanguageSelect } from '../language-select';
 
 export const company = {
   name: 'LIC',
@@ -186,6 +187,7 @@ export default function AppSidebar({
           <div className="flex items-center gap-2 px-4">
             <UserNav />
             <ThemeToggle />
+            <LanguageSelect />
           </div>
         </header>
         {/* page main content */}
