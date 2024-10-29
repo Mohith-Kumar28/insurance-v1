@@ -159,7 +159,7 @@ export default function AppSidebar({
             <SidebarMenuItem>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Link href="/">
+                  <Link href="/sign-in">
                     <Button variant={'outline'}>
                       <Undo2 color="red" />
                     </Button>

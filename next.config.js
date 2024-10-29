@@ -16,6 +16,21 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'picsum.photos',
         port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: ''
       }
     ]
   },

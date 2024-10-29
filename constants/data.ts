@@ -139,7 +139,7 @@ export const navItems: NavItem[] = [
       },
       {
         title: 'Login',
-        url: '/',
+        url: '/sign-in',
         icon: 'login'
       }
     ]
