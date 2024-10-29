@@ -91,13 +91,13 @@ export default function MemberForm({
                   <FormItem className="w-full">
                     <FormLabel>Profile Picture</FormLabel>
                     <FormControl>
-                      <FileUploader
+                      {/* <FileUploader
                         value={field.value}
                         onValueChange={field.onChange}
                         maxFiles={1}
                         maxSize={MAX_FILE_SIZE}
-                        accept={ACCEPTED_IMAGE_TYPES.join(',')}
-                      />
+                        accept={ACCEPTED_IMAGE_TYPES}
+                      /> */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
