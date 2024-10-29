@@ -7,6 +7,14 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
   Form,
   FormControl,
   FormField,
@@ -31,6 +39,7 @@ import { AlertTriangleIcon, Trash, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 interface ProfileFormType {
   initialData: any | null;
@@ -56,22 +65,8 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const [data, setData] = useState({});
   const delta = currentStep - previousStep;
 
-  const defaultValues = {
-    jobs: [
-      {
-        jobtitle: '',
-        employer: '',
-        startdate: '',
-        enddate: '',
-        jobcountry: '',
-        jobcity: ''
-      }
-    ]
-  };
-
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues,
     mode: 'onChange'
   });
 
@@ -80,10 +75,28 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     formState: { errors }
   } = form;
 
-  const { append, remove, fields } = useFieldArray({
-    control,
-    name: 'jobs'
-  });
+  // const { append, remove, fields } = useFieldArray({
+  //   control,
+  //   name: 'jobs'
+  // });
+
+  type BranchOption = {
+    value: string;
+    label: string;
+  };
+
+  const branchData: Record<string, BranchOption[]> = {
+    gorakhpur: [
+      { value: 'branch-1', label: 'Gorakhpur Main Branch' },
+      { value: 'branch-2', label: 'Civil Lines Branch' },
+      { value: 'branch-3', label: 'Golghar Branch' }
+    ],
+    varanasi: [
+      { value: 'branch-4', label: 'Varanasi Central' },
+      { value: 'branch-5', label: 'Sigra Branch' },
+      { value: 'branch-6', label: 'Lanka Branch' }
+    ]
+  };
 
   const onSubmit = async (data: ProfileFormValues) => {
     try {
@@ -127,26 +140,34 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const steps = [
     {
       id: 'Step 1',
-      name: 'Personal Information',
-      fields: ['firstname', 'lastname', 'email', 'contactno', 'country', 'city']
+      name: 'Basic Information',
+      fields: [
+        'firstname',
+        'lastname',
+        'mobno',
+        'agentCode',
+        'zone',
+        'division',
+        'branch'
+      ]
     },
-    {
-      id: 'Step 2',
-      name: 'Professional Informations',
-      // fields are mapping and flattening for the error to be trigger  for the dynamic fields
-      fields: fields
-        ?.map((_, index) => [
-          `jobs.${index}.jobtitle`,
-          `jobs.${index}.employer`,
-          `jobs.${index}.startdate`,
-          `jobs.${index}.enddate`,
-          `jobs.${index}.jobcountry`,
-          `jobs.${index}.jobcity`
-          // Add other field names as needed
-        ])
-        .flat()
-    },
-    { id: 'Step 3', name: 'Complete' }
+    // {
+    //   id: 'Step 2',
+    //   name: 'Professional Informations',
+    //   // fields are mapping and flattening for the error to be trigger  for the dynamic fields
+    //   fields: fields
+    //     ?.map((_, index) => [
+    //       `jobs.${index}.jobtitle`,
+    //       `jobs.${index}.employer`,
+    //       `jobs.${index}.startdate`,
+    //       `jobs.${index}.enddate`,
+    //       `jobs.${index}.jobcountry`,
+    //       `jobs.${index}.jobcity`
+    //       // Add other field names as needed
+    //     ])
+    //     .flat()
+    // },
+    { id: 'Step 2', name: 'Complete' }
   ];
 
   const next = async () => {
@@ -277,14 +298,15 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="mobno"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Mobile Number</FormLabel>
                       <FormControl>
                         <Input
+                          type="tel"
                           disabled={loading}
-                          placeholder="johndoe@gmail.com"
+                          placeholder="Enter mobile number"
                           {...field}
                         />
                       </FormControl>
@@ -294,15 +316,14 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="contactno"
+                  name="agentCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
+                      <FormLabel>Agent Code</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          placeholder="Enter you contact number"
                           disabled={loading}
+                          placeholder="Enter agent code"
                           {...field}
                         />
                       </FormControl>
@@ -312,10 +333,10 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="country"
+                  name="zone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Country</FormLabel>
+                      <FormLabel>Zone</FormLabel>
                       <Select
                         disabled={loading}
                         onValueChange={field.onChange}
@@ -326,17 +347,12 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                           <SelectTrigger>
                             <SelectValue
                               defaultValue={field.value}
-                              placeholder="Select a country"
+                              placeholder="Select zone"
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {/* @ts-ignore  */}
-                          {countries.map((country) => (
-                            <SelectItem key={country.id} value={country.id}>
-                              {country.name}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="kanpur">Kanpur</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -345,10 +361,10 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="city"
+                  name="division"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>City</FormLabel>
+                      <FormLabel>Division</FormLabel>
                       <Select
                         disabled={loading}
                         onValueChange={field.onChange}
@@ -359,15 +375,45 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                           <SelectTrigger>
                             <SelectValue
                               defaultValue={field.value}
-                              placeholder="Select a city"
+                              placeholder="Select division"
                             />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {/* @ts-ignore  */}
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.id}>
-                              {city.name}
+                          <SelectItem value="gorakhpur">Gorakhpur</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="branch"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Branch</FormLabel>
+                      <Select
+                        disabled={loading || !form.watch('division')}
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue
+                              defaultValue={field.value}
+                              placeholder="Select branch"
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {(form.watch('division')
+                            ? branchData[form.watch('division')]
+                            : []
+                          ).map((branch) => (
+                            <SelectItem key={branch.value} value={branch.value}>
+                              {branch.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -378,213 +424,28 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
                 />
               </>
             )}
+
             {currentStep === 1 && (
-              <>
-                {fields?.map((field, index) => (
-                  <Accordion
-                    type="single"
-                    collapsible
-                    defaultValue="item-1"
-                    key={field.id}
-                  >
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger
-                        className={cn(
-                          'relative !no-underline [&[data-state=closed]>button]:hidden [&[data-state=open]>.alert]:hidden',
-                          errors?.jobs?.[index] && 'text-red-700'
-                        )}
-                      >
-                        {`Work Experience ${index + 1}`}
-
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="absolute right-8"
-                          onClick={() => remove(index)}
-                        >
-                          <Trash2Icon className="h-4 w-4 " />
-                        </Button>
-                        {errors?.jobs?.[index] && (
-                          <span className="alert absolute right-8">
-                            <AlertTriangleIcon className="h-4 w-4   text-red-700" />
-                          </span>
-                        )}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          className={cn(
-                            'relative mb-4 gap-8 rounded-md border p-4 md:grid md:grid-cols-3'
-                          )}
-                        >
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobtitle`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job title</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.employer`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Employer</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="text"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.startdate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Start date</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="date"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.enddate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>End date</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="date"
-                                    disabled={loading}
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobcountry`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job country</FormLabel>
-                                <Select
-                                  disabled={loading}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        defaultValue={field.value}
-                                        placeholder="Select your job country"
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {countries.map((country) => (
-                                      <SelectItem
-                                        key={country.id}
-                                        value={country.id}
-                                      >
-                                        {country.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`jobs.${index}.jobcity`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Job city</FormLabel>
-                                <Select
-                                  disabled={loading}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        defaultValue={field.value}
-                                        placeholder="Select your job city"
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {cities.map((city) => (
-                                      <SelectItem key={city.id} value={city.id}>
-                                        {city.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                ))}
-
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    type="button"
-                    className="flex justify-center"
-                    size={'lg'}
-                    onClick={() =>
-                      append({
-                        jobtitle: '',
-                        employer: '',
-                        startdate: '',
-                        enddate: '',
-                        jobcountry: '',
-                        jobcity: ''
-                      })
-                    }
-                  >
-                    Add More
-                  </Button>
-                </div>
-              </>
-            )}
-            {currentStep === 2 && (
-              <div>
-                <h1>Completed</h1>
-                <pre className="whitespace-pre-wrap">
-                  {JSON.stringify(data)}
-                </pre>
-              </div>
+              <Card className="">
+                <CardHeader>
+                  <CardTitle>Submitted for review</CardTitle>
+                  <CardDescription>
+                    Your request will be approved by division manager in 72 hrs
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DotLottieReact
+                    className="mx-auto w-96"
+                    src="/anim/green-tick.lottie"
+                    loop
+                    autoplay
+                  />
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button variant="outline">Re Submit</Button>
+                  <Button>Visit Members List</Button>
+                </CardFooter>
+              </Card>
             )}
           </div>
 
