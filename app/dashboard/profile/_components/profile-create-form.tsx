@@ -54,11 +54,11 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? 'Edit product' : 'Create Your Profile';
+  const title = initialData ? 'Edit member' : 'Create Your Profile';
   const description = initialData
-    ? 'Edit a product.'
+    ? 'Edit a member.'
     : 'To create your resume, we first need some basic information about you.';
-  const toastMessage = initialData ? 'Product updated.' : 'Product created.';
+  const toastMessage = initialData ? 'Member updated.' : 'Member created.';
   const action = initialData ? 'Save changes' : 'Create';
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
@@ -102,13 +102,13 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
     try {
       setLoading(true);
       if (initialData) {
-        // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
+        // await axios.post(`/api/members/edit-member/${initialData._id}`, data);
       } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
+        // const res = await axios.post(`/api/members/create-member`, data);
+        // console.log("member", res);
       }
       router.refresh();
-      router.push(`/dashboard/products`);
+      router.push(`/dashboard/members`);
     } catch (error: any) {
     } finally {
       setLoading(false);
@@ -118,9 +118,9 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
-      //   await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      //   await axios.delete(`/api/${params.storeId}/members/${params.memberId}`);
       router.refresh();
-      router.push(`/${params.storeId}/products`);
+      router.push(`/${params.storeId}/members`);
     } catch (error: any) {
     } finally {
       setLoading(false);

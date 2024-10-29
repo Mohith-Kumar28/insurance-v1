@@ -1,20 +1,20 @@
 import FormCardSkeleton from '@/components/form-card-skeleton';
 import PageContainer from '@/components/layout/page-container';
 import { Suspense } from 'react';
-import ProductViewPage from '../_components/product-view-page';
+import MemberViewPage from '../_components/member-view-page';
 
 export const metadata = {
-  title: 'Dashboard : Product View'
+  title: 'Dashboard : Member View'
 };
 
-type PageProps = { params: { productId: string } };
+type PageProps = { params: { memberId: string } };
 
 export default function Page({ params }: PageProps) {
   return (
     <PageContainer scrollable>
       <div className="flex-1 space-y-4">
         <Suspense fallback={<FormCardSkeleton />}>
-          <ProductViewPage productId={params.productId} />
+          <MemberViewPage memberId={params.memberId} />
         </Suspense>
       </div>
     </PageContainer>

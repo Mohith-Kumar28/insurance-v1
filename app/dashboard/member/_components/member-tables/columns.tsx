@@ -1,10 +1,11 @@
 'use client';
-import { Product } from '@/constants/data';
-import { ColumnDef } from '@tanstack/react-table';
-import Image from 'next/image';
-import { CellAction } from './cell-action';
 
-export const columns: ColumnDef<Product>[] = [
+import { ColumnDef } from '@tanstack/react-table';
+import { CellAction } from './cell-action';
+import Image from 'next/image';
+import { Member } from '@/constants/mock-api';
+
+export const columns: ColumnDef<Member>[] = [
   {
     accessorKey: 'photo_url',
     header: 'IMAGE',
@@ -26,18 +27,25 @@ export const columns: ColumnDef<Product>[] = [
     header: 'NAME'
   },
   {
-    accessorKey: 'category',
-    header: 'CATEGORY'
+    accessorKey: 'mobile_number',
+    header: 'MOBILE NUMBER'
   },
   {
-    accessorKey: 'price',
-    header: 'PRICE'
+    accessorKey: 'agent_code',
+    header: 'AGENT CODE'
   },
   {
-    accessorKey: 'description',
-    header: 'DESCRIPTION'
+    accessorKey: 'zone',
+    header: 'ZONE'
   },
-
+  {
+    accessorKey: 'division',
+    header: 'DIVISION'
+  },
+  {
+    accessorKey: 'branch',
+    header: 'BRANCH'
+  },
   {
     id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />

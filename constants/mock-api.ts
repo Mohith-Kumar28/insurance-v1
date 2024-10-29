@@ -45,7 +45,7 @@ export const fakeUsers = {
         'Marketing Manager',
         'Graphic Designer',
         'Sales Manager',
-        'Product Manager'
+        'Member Manager'
       ];
       const cities = [
         'San Francisco',
@@ -184,136 +184,134 @@ export const fakeUsers = {
 // Initialize sample users
 fakeUsers.initialize();
 
-// Define the shape of Product data
-export type Product = {
-  photo_url: string;
+export type Member = {
+  id: string;
+  profile_picture: string;
   name: string;
-  description: string;
+  mobile_number: string;
+  agent_code: string;
+  zone: string;
+  division: string;
+  branch: string;
   created_at: string;
-  price: number;
-  id: number;
-  category: string;
   updated_at: string;
 };
-
-// Mock product data store
-export const fakeProducts = {
-  records: [] as Product[], // Holds the list of product objects
+// Mock member data store
+export const fakeMembers = {
+  records: [] as Member[], // Holds the list of member objects
 
   // Initialize with sample data
   initialize() {
-    const sampleProducts: Product[] = [];
-    function generateRandomProductData(id: number): Product {
-      const categories = [
-        'Electronics',
-        'Furniture',
-        'Clothing',
-        'Toys',
-        'Groceries',
-        'Books',
-        'Jewelry',
-        'Beauty Products'
+    const sampleMembers: Member[] = [];
+    function generateRandomMemberData(id: number): Member {
+      const divisions = ['Gorakhpur', 'Varanasi', 'Lucknow'];
+      const gorakhpurBranches = [
+        'Gorakhpur Main Branch',
+        'Civil Lines Branch',
+        'Golghar Branch'
       ];
 
+      const division = faker.helpers.arrayElement(divisions);
+
       return {
-        id,
-        name: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        created_at: faker.date
-          .between({ from: '2022-01-01', to: '2023-12-31' })
-          .toISOString(),
-        price: parseFloat(faker.commerce.price({ min: 5, max: 500, dec: 2 })),
-        photo_url: `https://api.slingacademy.com/public/sample-products/${id}.png`,
-        category: faker.helpers.arrayElement(categories),
+        id: faker.string.uuid(),
+        profile_picture: `https://i.pravatar.cc/300`,
+        name: `${faker.person.firstName()} ${faker.person.lastName()}`,
+        mobile_number: faker.phone.number(),
+        agent_code: `AG${faker.number.int({ min: 10000, max: 99999 })}`,
+        zone: 'Kanpur',
+        division: division,
+        branch:
+          division === 'Gorakhpur'
+            ? faker.helpers.arrayElement(gorakhpurBranches)
+            : `${division} Main Branch`,
+        created_at: faker.date.past().toISOString(),
         updated_at: faker.date.recent().toISOString()
       };
     }
 
     // Generate remaining records
     for (let i = 1; i <= 20; i++) {
-      sampleProducts.push(generateRandomProductData(i));
+      sampleMembers.push(generateRandomMemberData(i));
     }
 
-    this.records = sampleProducts;
+    this.records = sampleMembers;
   },
 
-  // Get all products with optional category filtering and search
+  // Get all members with optional category filtering and search
   async getAll({
-    categories = [],
+    divisions = [],
     search
   }: {
-    categories?: string[];
+    divisions?: string[];
     search?: string;
   }) {
-    let products = [...this.records];
+    let members = [...this.records];
 
-    // Filter products based on selected categories
-    if (categories.length > 0) {
-      products = products.filter((product) =>
-        categories.includes(product.category)
-      );
+    // Filter members based on selected divisions
+    if (divisions.length > 0) {
+      members = members.filter((member) => divisions.includes(member.division));
     }
 
-    // Search functionality across multiple fields
+    // Search functionality across relevant insurance agent fields
     if (search) {
-      products = matchSorter(products, search, {
-        keys: ['name', 'description', 'category']
+      members = matchSorter(members, search, {
+        keys: ['name', 'agent_code', 'mobile_number', 'division', 'branch']
       });
     }
 
-    return products;
+    return members;
   },
 
   // Get paginated results with optional category filtering and search
-  async getProducts({
+  async getMembers({
     page = 1,
     limit = 10,
-    categories,
+    divisions,
     search
   }: {
     page?: number;
     limit?: number;
-    categories?: string;
+    divisions?: string;
     search?: string;
   }) {
     await delay(1000);
-    const categoriesArray = categories ? categories.split('.') : [];
-    const allProducts = await this.getAll({
-      categories: categoriesArray,
+    const divisionsArray = divisions ? divisions.split('.') : [];
+    const allMembers = await this.getAll({
+      divisions: divisionsArray,
       search
     });
-    const totalProducts = allProducts.length;
+    const totalMembers = allMembers.length;
 
     // Pagination logic
     const offset = (page - 1) * limit;
-    const paginatedProducts = allProducts.slice(offset, offset + limit);
+    const paginatedMembers = allMembers.slice(offset, offset + limit);
 
-    // Mock current time
+    // Current time for response
     const currentTime = new Date().toISOString();
 
-    // Return paginated response
     return {
       success: true,
       time: currentTime,
-      message: 'Sample data for testing and learning purposes',
-      total_products: totalProducts,
+      message: 'Insurance agents data retrieved successfully',
+      total_members: totalMembers,
       offset,
       limit,
-      products: paginatedProducts
+      members: paginatedMembers
     };
   },
 
-  // Get a specific product by its ID
-  async getProductById(id: number) {
+  // Get a specific member by its ID
+  async getMemberById(id: number) {
     await delay(1000); // Simulate a delay
 
-    // Find the product by its ID
-    const product = this.records.find((product) => product.id === id);
+    // Find the member by its ID
+    const member = this.records.find((member) => member.id === id.toString());
 
-    if (!product) {
+    if (!member) {
       return {
         success: false,
-        message: `Product with ID ${id} not found`
+        message: `Member with ID ${id} not found`
       };
     }
 
@@ -323,11 +321,11 @@ export const fakeProducts = {
     return {
       success: true,
       time: currentTime,
-      message: `Product with ID ${id} found`,
-      product
+      message: `Member with ID ${id} found`,
+      member
     };
   }
 };
 
-// Initialize sample products
-fakeProducts.initialize();
+// Initialize sample members
+fakeMembers.initialize();
