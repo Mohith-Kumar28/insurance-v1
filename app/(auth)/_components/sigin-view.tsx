@@ -3,6 +3,7 @@ import Link from 'next/link';
 import UserAuthForm from './user-auth-form';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Authentication',
@@ -24,7 +25,13 @@ export default function SignInViewPage() {
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          Logo
+          <Image
+            alt="logo"
+            width={70}
+            height={70}
+            className=" overflow-hidden rounded-xl"
+            src={'/logo-white.png'}
+          />
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
