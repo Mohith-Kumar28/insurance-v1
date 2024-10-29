@@ -3,7 +3,7 @@ import { BarGraph } from './bar-graph';
 import { PieGraph } from './pie-graph';
 import { CalendarDateRangePicker } from '@/components/date-range-picker';
 import PageContainer from '@/components/layout/page-container';
-import { RecentSales } from './recent-sales';
+import { RecentRegistrations } from './recent-sales';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,6 +13,14 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { IndianRupeeIcon } from 'lucide-react';
+
+// Dummy data
+const totalMembers = 50000;
+const livesSaved = 1500;
+const raisedFunds = 250000;
+const newMembersLastWeek = 200;
+const totalSubscriptionMembers = 30000;
 
 export default function OverViewPage() {
   return (
@@ -39,23 +47,19 @@ export default function OverViewPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Revenue
+                    Funds Raised
                   </CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
+                  <IndianRupeeIcon
                     fill="none"
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
                     className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
+                  />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <div className="text-2xl font-bold">₹45,231.89</div>
                   <p className="text-xs text-muted-foreground">
                     +20.1% from last month
                   </p>
@@ -63,9 +67,7 @@ export default function OverViewPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Subscriptions
-                  </CardTitle>
+                  <CardTitle className="text-sm font-medium">Members</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -90,7 +92,9 @@ export default function OverViewPage() {
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Lives Saved
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -115,7 +119,7 @@ export default function OverViewPage() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Active Now
+                    Total Tickets
                   </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -144,21 +148,19 @@ export default function OverViewPage() {
               </div>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
+                  <CardTitle>Recent Members</CardTitle>
+                  <CardDescription>265 new users this week.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  <RecentRegistrations />
                 </CardContent>
               </Card>
-              <div className="col-span-4">
+              {/* <div className="col-span-4">
                 <AreaGraph />
-              </div>
-              <div className="col-span-4 md:col-span-3">
+              </div> */}
+              {/* <div className="col-span-4 md:col-span-3">
                 <PieGraph />
-              </div>
+              </div> */}
             </div>
           </TabsContent>
         </Tabs>

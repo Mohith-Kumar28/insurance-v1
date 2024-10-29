@@ -111,22 +111,15 @@ export type Employee = {
 };
 
 export const navItems: NavItem[] = [
+  // {
+  //   title: 'Employee',
+  //   url: '/dashboard/employee',
+  //   icon: 'user',
+  //   isActive: false,
+  //   items: [] // No child items
+  // },
   {
-    title: 'Dashboard',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    isActive: false,
-    items: [] // Empty array as there are no child items for Dashboard
-  },
-  {
-    title: 'Employee',
-    url: '/dashboard/employee',
-    icon: 'user',
-    isActive: false,
-    items: [] // No child items
-  },
-  {
-    title: 'Member',
+    title: 'Members',
     url: '/dashboard/member',
     icon: 'member',
     isActive: false,
@@ -152,10 +145,26 @@ export const navItems: NavItem[] = [
     ]
   },
   {
-    title: 'Kanban',
-    url: '/dashboard/kanban',
-    icon: 'kanban',
-    isActive: false,
-    items: [] // No child items
+    title: 'Admin',
+    url: '#', // Placeholder as there is no direct link for the parent
+    icon: 'billing',
+    isActive: true,
+
+    items: [
+      {
+        title: 'Dashboard',
+        url: '/dashboard/overview',
+        icon: 'dashboard',
+        isActive: false,
+        items: [] // Empty array as there are no child items for Dashboard
+      },
+      {
+        title: 'Kanban',
+        url: '/dashboard/kanban',
+        icon: 'kanban',
+        isActive: false,
+        items: [] // No child items
+      }
+    ]
   }
 ];
