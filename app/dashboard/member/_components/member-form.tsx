@@ -20,7 +20,6 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Member } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -34,25 +33,17 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const formSchema = z.object({
-  image: z
+  profile_picture: z
     .any()
-    .refine((files) => files?.length == 1, 'Image is required.')
-    .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.'
-    ),
-  name: z.string().min(2, {
-    message: 'Member name must be at least 2 characters.'
-  }),
-  category: z.string(),
-  price: z.number(),
-  description: z.string().min(10, {
-    message: 'Description must be at least 10 characters.'
-  })
+    .refine((files) => files?.length === 1, 'Profile picture is required.'),
+  name: z
+    .string()
+    .min(2, { message: 'Member name must be at least 2 characters.' }),
+  mobile_number: z.string(),
+  agent_code: z.string(),
+  zone: z.string(),
+  division: z.string(),
+  branch: z.string()
 });
 
 export default function MemberForm({
@@ -63,10 +54,13 @@ export default function MemberForm({
   pageTitle: string;
 }) {
   const defaultValues = {
+    profile_picture: initialData?.profile_picture || '',
     name: initialData?.name || '',
-    category: initialData?.category || '',
-    price: initialData?.price || 0,
-    description: initialData?.description || ''
+    mobile_number: initialData?.mobile_number || '',
+    agent_code: initialData?.agent_code || '',
+    zone: initialData?.zone || '',
+    division: initialData?.division || '',
+    branch: initialData?.branch || ''
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -90,22 +84,18 @@ export default function MemberForm({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="image"
+              name="profile_picture"
               render={({ field }) => (
                 <div className="space-y-6">
                   <FormItem className="w-full">
-                    <FormLabel>Images</FormLabel>
+                    <FormLabel>Profile Picture</FormLabel>
                     <FormControl>
                       <FileUploader
                         value={field.value}
                         onValueChange={field.onChange}
-                        maxFiles={4}
-                        maxSize={4 * 1024 * 1024}
-                        // disabled={loading}
-                        // progresses={progresses}
-                        // pass the onUpload function here for direct upload
-                        // onUpload={uploadFiles}
-                        // disabled={isUploading}
+                        maxFiles={1}
+                        maxSize={MAX_FILE_SIZE}
+                        accept={ACCEPTED_IMAGE_TYPES.join(',')}
                       />
                     </FormControl>
                     <FormMessage />
@@ -122,7 +112,11 @@ export default function MemberForm({
                   <FormItem>
                     <FormLabel>Member Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter member name" {...field} />
+                      <Input
+                        placeholder="Enter member name"
+                        {...field}
+                        className="w-full"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,45 +124,33 @@ export default function MemberForm({
               />
               <FormField
                 control={form.control}
-                name="category"
+                name="mobile_number"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value[field.value.length - 1]}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select categories" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="beauty">Beauty Members</SelectItem>
-                        <SelectItem value="electronics">Electronics</SelectItem>
-                        <SelectItem value="clothing">Clothing</SelectItem>
-                        <SelectItem value="home">Home & Garden</SelectItem>
-                        <SelectItem value="sports">
-                          Sports & Outdoors
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Mobile Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="Enter mobile number"
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="price"
+                name="agent_code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Agent Code</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="Enter price"
+                        placeholder="Enter agent code"
                         {...field}
+                        className="w-full"
                       />
                     </FormControl>
                     <FormMessage />
@@ -176,24 +158,72 @@ export default function MemberForm({
                 )}
               />
             </div>
+
             <FormField
               control={form.control}
-              name="description"
+              name="zone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Zone</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Enter member description"
-                      className="resize-none"
+                    <Select
+                      onValueChange={(value) => field.onChange(value)}
+                      value={field.value[field.value.length - 1]}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select zone" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {/* Add zone options here */}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="division"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Division</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter division"
                       {...field}
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Add Member</Button>
+
+            <FormField
+              control={form.control}
+              name="branch"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Branch</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter branch"
+                      {...field}
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="mt-4 w-full">
+              Add Member
+            </Button>
           </form>
         </Form>
       </CardContent>
